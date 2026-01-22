@@ -127,19 +127,25 @@ function showQuestion(){
 
 function answer(val){
   const q = questions[current];
-  if(val === q.a){
+  const isCorrect = (val === q.a);
+
+  if(isCorrect){
     score++;
-  }else{
-    wrongList.push({
-      no: current + 1,
-      q: q.q,
-      e: q.e,
-      img: q.img
-    });
   }
+
+  // 正解・不正解どちらも記録する
+  wrongList.push({
+    no: current + 1,
+    q: q.q,
+    e: q.e,
+    img: q.img,
+    result: isCorrect   // ← trueなら〇、falseなら×
+  });
+
   current++;
   current < questions.length ? showQuestion() : showResult();
 }
+
 
 function showResult(){
   let html = `
@@ -152,18 +158,29 @@ function showResult(){
     : `<p class="wrong">不合格</p>`;
 
   if(wrongList.length > 0){
-    html += `<div class="review"><h3>間違えた問題の解説</h3>`;
-    wrongList.forEach(w=>{
-      let imgHtml = w.img ? `<img src="${w.img}" class="question-img">` : "";
-      html += `
-        <div style="margin-bottom:25px;">
-          <strong>【第${w.no}問】</strong><br>
-          ${w.q}<br>
-          ${imgHtml}
-          <span class="wrong">解説：</span>${w.e}
-        </div>
-      `;
-    });
+   html += `<div class="review"><h3>解説一覧（〇×付き）</h3>`;
+   wrongList.forEach(w=>{
+  let imgHtml = w.img ? `<img src="${w.img}" class="question-img">` : "";
+
+  // 〇×表示用
+  let mark = w.result ? "〇 正解" : "× 不正解";
+  let cls  = w.result ? "correct" : "wrong";
+
+  html += `
+    <div style="margin-bottom:25px;">
+      <strong>【第${w.no}問】</strong>
+      <span class="${cls}" style="margin-left:15px;font-size:22px;">
+        ${mark}
+      </span>
+      <br><br>
+
+      ${w.q}<br>
+      ${imgHtml}
+      <strong>解説：</strong>${w.e}
+    </div>
+  `;
+});
+
     html += `</div>`;
   }else{
     html += `<p class="correct">全問正解です！</p>`;
@@ -177,6 +194,7 @@ showQuestion();
 
 </body>
 </html>
+
 
 
 
