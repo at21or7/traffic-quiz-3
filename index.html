@@ -3,7 +3,8 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>交通法規 模擬テスト（50問）</title>
+<title>標識・標示の学科問題50問｜無料○×模擬テスト｜村上中央自動車学校</title>
+<meta name="description" content="運転免許の学科試験対策に役立つ標識・標示の○×問題50問。無料で挑戦でき、採点・合格判定・間違えた問題の解説と再テストができます。村上中央自動車学校が提供しています。">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Googleアナリティクス -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-SXPTJ0D324"></script>
@@ -142,6 +143,7 @@ const PASS_LINE = 47;
 let current = 0;
 let score = 0;
 let wrongList = [];
+let isRetryMode = false; // 誤答再テスト中は通常テストとして計測しない
 
 const questions = [
 /* 1 */ {q:"この標識は、車は通行できないが、歩行者は通行できることを示している。",img:"images/q1.png",a:false,e:"これは「通行止め」の標識です。歩行者、遠隔操作小型車、車、路面電車のすべてが通行できません。"},
@@ -194,7 +196,7 @@ const questions = [
 /* 47 */ {q:"この表示は、その場所が「転回禁止」の終わりであることを示している。",img:"images/q47.png",a:false,e:"「転回禁止」の標示です。転回禁止の終わりではありません。"},
 /* 48 */ {q:"この表示は、この先50メートルに踏切または交差点があることを示している。",img:"images/q48.png",a:false,e:"「規制速度時速５０キロメートルの終わり」です。"},
 /* 49 */ {q:"この表示は、駐車禁止を示している。",img:"images/q49.png",a:false,e:"「駐停車禁止」の標示です。"},
-/* 50 */ {q:"この表示は、駐停車禁止を示している。",img:"images/q50.png",a:true,e:"「駐車禁止」の標示です。"},
+/* 50 */ {q:"この表示は、駐停車禁止を示している。",img:"images/q50.png",a:false,e:"「駐車禁止」の標示です。"},
 ];
 
 
@@ -204,7 +206,7 @@ const questionsMaster = [...questions];
 
 function showQuestion(){
   const q = questions[current];
-  let imgHtml = q.img ? `<img src="${q.img}" class="question-img">` : "";
+  let imgHtml = q.img ? `<img src="${q.img}" class="question-img" alt="第${q.no}問の標識・標示">` : "";
   container.innerHTML = `
     <p style="font-size:36px;font-weight:bold;color:#003366;">【第 ${q.no} 問】</p>
     <p style="font-size:clamp(32px,8.5vw,42px);line-height:1.8;font-weight:bold;">${q.q}</p>
@@ -235,7 +237,16 @@ function answer(val){
 }
 
 function showResult(){
-  const passLine = (questions.length === questionsMaster.length) ? PASS_LINE : questions.length;
+  const isFullTest = !isRetryMode && questions.length === questionsMaster.length;
+  const passLine = isFullTest ? PASS_LINE : questions.length;
+
+  // 通常の50問完了・合格のみGA4に送信。誤答再テストは対象外。
+  if (isFullTest && typeof gtag === "function") {
+    gtag("event", "quiz_complete", { quiz_type: "signs_markings", score: score });
+    if (score >= PASS_LINE) {
+      gtag("event", "quiz_pass", { quiz_type: "signs_markings", score: score });
+    }
+  }
 
   let html = `
     <h2 style="font-size:48px;">結果</h2>
@@ -250,7 +261,7 @@ function showResult(){
     html += `<div class="review"><h3>間違えた問題の解説</h3>`;
 
     wrongList.forEach(w=>{
-      let imgHtml = w.img ? `<img src="${w.img}" class="question-img">` : "";
+      let imgHtml = w.img ? `<img src="${w.img}" class="question-img" alt="第${w.no}問の標識・標示">` : "";
 
       html += `
         <div style="margin-bottom:30px;">
@@ -281,6 +292,11 @@ function showResult(){
     </button>
   `;
 
+  html += `
+    <p style="text-align:center;margin-top:30px;">
+      <a href="https://murakami-ds.com/" style="display:block;background:#003366;color:#fff;padding:18px 10px;border-radius:12px;font-size:24px;font-weight:bold;text-decoration:none;">村上中央自動車学校 公式サイトはこちら</a>
+    </p>
+  `;
   container.innerHTML = html;
 }
 
@@ -294,6 +310,7 @@ function retryWrong(){
   current = 0;
   score = 0;
   wrongList = [];
+  isRetryMode = true;
 
   showQuestion();
 }
@@ -305,6 +322,7 @@ function restartAll(){
   current = 0;
   score = 0;
   wrongList = [];
+  isRetryMode = false;
 
   showQuestion();
 }
@@ -314,6 +332,7 @@ showQuestion();
 
 </body>
 </html>
+
 
 
 
