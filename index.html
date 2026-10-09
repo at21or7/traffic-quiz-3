@@ -229,4 +229,94 @@ function answer(val){
   }
 
   current++;
-  current < questions.length ? showQuestion() : showRes
+  current < questions.length ? showQuestion() : showResult();
+}
+
+function showResult(){
+  const isFullTest = !isRetryMode && questions.length === questionsMaster.length;
+  const passLine = isFullTest ? PASS_LINE : questions.length;
+
+  // 通常の50問完了・合格のみGA4に送信。誤答再テストは対象外。
+  if (isFullTest && typeof gtag === "function") {
+    gtag("event", "quiz_complete", { quiz_type: "signs_markings", score: score });
+    if (score >= PASS_LINE) {
+      gtag("event", "quiz_pass", { quiz_type: "signs_markings", score: score });
+    }
+  }
+
+  const passed = score >= passLine;
+  const rate = Math.round(score / questions.length * 100);
+  const status = isFullTest ? (passed ? "合格" : "不合格") : (passed ? "復習クリア" : "もう一度復習しましょう");
+  const message = wrongList.length
+    ? `間違えた${wrongList.length}問を復習して、${isFullTest ? "合格" : "全問正解"}を目指しましょう。`
+    : "全問正解です！よくできました。";
+  const actions = `
+    <div class="result-actions">
+      ${wrongList.length ? `<button class="action-btn" onclick="retryWrong()">間違えた${wrongList.length}問を再テスト</button>` : ""}
+      <button class="action-btn ${wrongList.length ? "secondary" : ""}" onclick="restartAll()">最初から50問に挑戦</button>
+    </div>`;
+  let html = `
+    <section class="result-summary" aria-labelledby="result-title">
+      <h2 id="result-title" tabindex="-1">${isFullTest ? "テスト結果" : "再テスト結果"}</h2>
+      <p class="result-status ${passed ? "passed" : ""}">${status}</p>
+      <p class="result-score">${score}<small> / ${questions.length}点</small></p>
+      <p class="result-meta">${isFullTest ? `合格ライン ${PASS_LINE}点` : "再テストの目標：全問正解"}<br>正答率 ${rate}%${!passed ? `・${isFullTest ? "合格" : "全問正解"}まであと${passLine - score}点` : ""}</p>
+      <p class="result-message">${message}</p>
+    </section>
+    ${actions}
+  `;
+  if(wrongList.length){
+    html += `<section class="review"><h3>間違えた問題の解説 <span>${wrongList.length}問</span></h3>`;
+    wrongList.forEach(w=>{
+      const correctAnswer = questionsMaster.find(q => q.no === w.no).a;
+      html += `
+        <article class="review-card">
+          <h4>第${w.no}問</h4>
+          <p>${w.q}</p>
+          ${w.img ? `<img src="${w.img}" class="question-img" alt="第${w.no}問の標識・標示">` : ""}
+          <div class="answer-label">正解：${correctAnswer ? "○" : "×"}</div>
+          <p class="explanation"><strong>解説</strong>${w.e}</p>
+        </article>`;
+    });
+    html += `</section>${actions}`;
+  }
+  html += `<a class="menu-link" href="https://at21or7.github.io/">← 問題メニューに戻る</a><a class="school-link" href="https://murakami-ds.com/">村上中央自動車学校 公式サイトへ →</a>`;
+
+  container.innerHTML = html;
+  document.getElementById("result-title").focus();
+  window.scrollTo(0, 0);
+}
+
+function retryWrong(){
+  const retryNumbers = wrongList.map(w => w.no);
+  const retryQuestions = questionsMaster.filter(q => retryNumbers.includes(q.no));
+
+  questions.length = 0;
+  retryQuestions.forEach(q => questions.push(q));
+
+  current = 0;
+  score = 0;
+  wrongList = [];
+  isRetryMode = true;
+
+  showQuestion();
+}
+
+function restartAll(){
+  questions.length = 0;
+  questionsMaster.forEach(q => questions.push(q));
+
+  current = 0;
+  score = 0;
+  wrongList = [];
+  isRetryMode = false;
+
+  showQuestion();
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
+
