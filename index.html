@@ -18,112 +18,29 @@
 </script>
 
 <style>
+
 *{box-sizing:border-box}
-body{
-  font-family: "Arial", sans-serif;
-  background:#eef2f5;
-  margin:0;
-  padding:10px;
-}
-#container{
-  max-width:900px;
-  margin:24px auto;
-  background:#fff;
-  border:2px solid #003366;
-  padding:25px;
-  box-sizing:border-box;
-}
-h1{
-  text-align:center;
-  color:#003366;
-  font-size:42px;
-  line-height:1.35;
-}
-button{
-  width:46%;
-  padding:24px 0;
-  font-size:62px;
-  margin:12px 1%;
-  cursor:pointer;
-  border-radius:14px;
-  border:2px solid #003366;
-  background:#f8fbff;
-}
-.correct{ color:green; font-weight:bold; }
-.wrong{ color:red; font-weight:bold; }
-.review{
-  margin-top:25px;
-  border-top:2px solid #003366;
-  padding-top:15px;
-}
-img.question-img{
-  width:250px;
-  max-width:100%;
-  height:auto;
-  margin:18px auto;
-  display:block;
-  border:1px solid #ccc;
-}
-
-@media screen and (max-width:600px){
-  img.question-img{
-    width:220px;
-    max-width:100%;
-  }
-}
-#container p{
-  font-size:36px;
-  line-height:1.8;
-}
-h2{
-  font-size:48px;
-}
-h3{
-  font-size:38px;
-}
-.review div{
-  font-size:34px;
-  line-height:1.8;
-}
-.action-btn{
-  width:100%;
-  font-size:38px;
-  padding:24px 10px;
-  margin:18px 0 0;
-  background:#003366;
-  color:white;
-}
-
-@media screen and (max-width:600px){
-  body{
-    padding:6px;
-  }
-  h1{
-    font-size:30px;
-  }
-  #container{
-    padding:18px;
-    margin:10px auto;
-  }
-  #container p{
-    font-size:32px;
-    line-height:1.8;
-  }
-  button{
-    width:46%;
-    font-size:60px;
-    padding:26px 0;
-  }
-  .review div{
-    font-size:34px;
-    line-height:1.8;
-  }
-  .action-btn{
-    width:100%;
-    font-size:30px;
-    padding:22px 10px;
-  }
-}
+body{font-family:Arial,'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;background:#eef2f5;color:#111;margin:0;padding:10px}
+.site-header{text-align:center;max-width:900px;margin:18px auto 20px}
+.site-header h1{font-size:34px;line-height:1.4;color:#003366;margin:0 0 16px}
+.school-name,.quiz-title{display:block}
+.quiz-subtitle{font-size:24px;line-height:1.6;color:#555;margin:0}
+#container{max-width:900px;margin:20px auto;background:#fff;border:2px solid #003366;padding:25px}
+#container .question-no{font-size:36px;line-height:1.5;font-weight:bold;color:#003366;margin:0 0 20px}
+#container .question-text{font-size:40px;line-height:1.7;font-weight:bold;margin:0 0 24px;overflow-wrap:anywhere}
+img.question-img{display:block;width:250px;max-width:100%;height:auto;margin:20px auto 24px;border:1px solid #ccc}
+.answer-choices{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.answer-choices button{width:100%;min-height:136px;padding:16px 0;font-family:inherit;font-size:64px;line-height:1.2;font-weight:bold;cursor:pointer;border:2px solid #003366;border-radius:14px;background:#f8fbff;color:#003366;margin:0;touch-action:manipulation}
+.action-btn{font-family:inherit;cursor:pointer;border:2px solid #003366;background:#003366;color:#fff}
+#container .quiz-progress{padding:16px;margin:0 0 24px;background:#f1f6fa;border-radius:12px}
+#container .quiz-progress-label{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;font-size:16px;font-weight:bold;color:#003366;line-height:1.6;margin-bottom:10px}
+#container .quiz-progress-label span{min-width:0}
+#container .quiz-progress-label span:last-child{font-weight:normal;color:#526578;white-space:nowrap}
+#container .quiz-progress progress{display:block;width:100%;height:10px;border:0;border-radius:10px;overflow:hidden;background:#dce6ef;accent-color:#003366}
+#container .quiz-progress progress::-webkit-progress-bar{background:#dce6ef;border-radius:10px}
+#container .quiz-progress progress::-webkit-progress-value{background:#003366;border-radius:10px}
+#container .quiz-progress progress::-moz-progress-bar{background:#003366;border-radius:10px}
+#container .menu-link{display:block;text-align:center;min-height:44px;margin:20px 0 8px;padding:12px;font-size:17px;line-height:1.6;color:#003366;text-underline-offset:4px}
 /* 結果画面 */
 #container:has(.result-summary){max-width:820px;border:1px solid #d7e2ec;border-radius:20px;padding:32px;box-shadow:0 8px 30px #0033660a;color:#24364a}
 .result-summary{text-align:center;padding:8px 0 24px}
@@ -170,52 +87,28 @@ button:focus-visible,a:focus-visible{outline:3px solid #dd8500;outline-offset:4p
 #container .review-card .answer-label{font-size:16px;line-height:1.6}
 @media(max-width:600px){#container .result-summary .result-score{font-size:64px}#container .result-meta{font-size:16px}#container .result-message,#container .review-card p{font-size:17px}}
 
-#container .quiz-progress{margin:0 0 24px;padding:16px;background:#f1f6fa;border-radius:12px}
-#container .quiz-progress-label{display:flex;justify-content:space-between;gap:12px;font-size:16px;font-weight:bold;color:#003366;line-height:1.6;margin-bottom:10px}
-#container .quiz-progress-label span:last-child{font-weight:normal;color:#526578}
-#container .quiz-progress progress{display:block;width:100%;height:10px;border:0;border-radius:10px;overflow:hidden;background:#dce6ef;accent-color:#003366}
-#container .quiz-progress progress::-webkit-progress-bar{background:#dce6ef;border-radius:10px}
-#container .quiz-progress progress::-webkit-progress-value{background:#003366;border-radius:10px}
-#container .quiz-progress progress::-moz-progress-bar{background:#003366;border-radius:10px}
-#container .menu-link{display:block;text-align:center;margin:20px 0 8px;padding:12px;font-size:17px;line-height:1.6;color:#003366;text-underline-offset:4px}
-@media(max-width:600px){#container .quiz-progress{padding:12px}#container .quiz-progress-label{font-size:15px}}
 
-/* スマホの出題画面 */
-.mobile-heading,.mobile-subtitle{display:none}
-.answer-choices{display:contents}
+/* PCとスマホで、3種類すべて共通の表示設定 */
 @media screen and (max-width:600px){
-  *,*::before,*::after{box-sizing:border-box}
   body{padding:12px 8px}
-  h1{
-    margin:4px 0 8px;
-    font-size:22px;
-    line-height:1.45;
-  }
-  h1 .school-name{
-    display:block;
-    font-size:16px;
-    font-weight:600;
-    margin-bottom:4px;
-  }
-  .desktop-heading,.desktop-subtitle,.header-break{display:none}
-  .mobile-heading,.mobile-subtitle{display:block}
-  .quiz-subtitle{font-size:14px !important;line-height:1.6 !important;margin:8px 0 12px;color:#526578}
-  #container:has(.question-screen){padding:16px;margin:12px auto;border:1px solid #c8d9e8;border-radius:14px}
+  .site-header{margin:4px auto 12px}
+  .site-header h1{font-size:22px;line-height:1.45;margin:0 0 8px}
+  .site-header .school-name{font-size:16px;font-weight:600;margin-bottom:4px}
+  .quiz-subtitle{font-size:14px;line-height:1.6;color:#526578}
+  #container{padding:16px;margin:12px auto;border:1px solid #c8d9e8;border-radius:14px}
+  #container .question-no{font-size:20px;line-height:1.5;margin:0 0 12px}
+  #container .question-text{font-size:24px;line-height:1.65;font-weight:600;margin:0 0 16px}
+  .question-screen img.question-img{width:200px;max-height:240px;object-fit:contain;margin:16px auto 20px}
+  .answer-choices{gap:12px}
+  .answer-choices button{min-height:80px;padding:8px 0;font-size:48px;line-height:1.25;border-radius:12px}
   #container .quiz-progress{padding:12px;margin:0 0 16px}
-  #container .quiz-progress-label{flex-wrap:wrap;gap:4px 8px;font-size:14px;line-height:1.5;margin-bottom:8px}
-  #container .quiz-progress-label span{min-width:0}
-  #container .quiz-progress-label span:last-child{white-space:nowrap}
-  #container .question-screen .question-no{font-size:20px !important;line-height:1.5 !important;color:#003366;font-weight:bold;margin:0 0 12px}
-  #container .question-screen .question-text{font-size:24px !important;line-height:1.65 !important;font-weight:600;margin:0 0 16px;overflow-wrap:anywhere}
-  #container .question-screen img.question-img{display:block;width:200px;max-width:100%;height:auto;max-height:240px;object-fit:contain;margin:16px auto 20px}
-  #container .question-screen .answer-choices{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin:0}
-  #container .question-screen .answer-choices button{width:100%;min-height:80px;padding:8px 0;font-size:48px;line-height:1.25;margin:0;color:#003366;background:#f8fbff;border:2px solid #003366;border-radius:12px;font-weight:bold;touch-action:manipulation}
-  #container .question-screen .menu-link{font-size:15px;line-height:1.6;min-height:44px;margin:16px 0 0;padding:10px 4px}
+  #container .quiz-progress-label{font-size:14px;line-height:1.5;gap:4px 8px;margin-bottom:8px}
+  #container .question-screen .menu-link{font-size:15px;line-height:1.6;margin:16px 0 0;padding:10px 4px}
 }
 @media screen and (max-width:360px){
-  #container:has(.question-screen){padding:14px}
+  #container{padding:14px}
   #container .quiz-progress-label{font-size:13px}
-  #container .question-screen img.question-img{width:180px}
+  .question-screen img.question-img{width:180px}
 }
 </style>
 
@@ -223,10 +116,10 @@ button:focus-visible,a:focus-visible{outline:3px solid #dd8500;outline-offset:4p
 
 <body>
 
-<h1><span class="school-name">村上中央自動車学校</span><span class="desktop-heading">　学科問題</span><span class="mobile-heading">標識・標示問題50問</span></h1>
-<p style="text-align:center;color:#555;font-size:28px;" class="quiz-subtitle"><span class="desktop-subtitle">
-標識・標示の問題（全50問）
-</span><span class="mobile-subtitle">○×形式・全50問・合格ライン47点</span></p>
+<header class="site-header">
+  <h1><span class="school-name">村上中央自動車学校</span><span class="quiz-title">標識・標示問題50問</span></h1>
+  <p class="quiz-subtitle">○×形式・全50問・合格ライン47点</p>
+</header>
 
 <div id="container"></div>
 
@@ -306,14 +199,17 @@ function progressMarkup(){
 function showQuestion(){
   if(current === 0) window.scrollTo(0, 0);
   const q = questions[current];
-  let imgHtml = q.img ? `<img src="${q.img}" class="question-img" alt="第${q.no}問の標識・標示">` : "";
+  const imgHtml = q.img ? `<img src="${q.img}" class="question-img" alt="第${q.no}問の標識・図">` : "";
   container.innerHTML = `<section class="question-screen">${progressMarkup()}
-    <p style="font-size:36px;font-weight:bold;color:#003366;" class="question-no">【第 ${q.no} 問】</p>
-    <p style="font-size:clamp(32px,8.5vw,42px);line-height:1.8;font-weight:bold;" class="question-text">${q.q}</p>
+    <p class="question-no">【第 ${q.no} 問】</p>
+    <p class="question-text">${q.q}</p>
     ${imgHtml}
-    <div class="answer-choices"><button aria-label="○：正しい" onclick="answer(true)">○</button>
-    <button aria-label="×：誤り" onclick="answer(false)">×</button></div>
-  <a class="menu-link" href="https://at21or7.github.io/">← 問題メニューに戻る</a></section>`;
+    <div class="answer-choices">
+      <button aria-label="○：正しい" onclick="answer(true)">○</button>
+      <button aria-label="×：誤り" onclick="answer(false)">×</button>
+    </div>
+    <a class="menu-link" href="https://at21or7.github.io/">← 問題メニューに戻る</a>
+  </section>`;
 }
 
 function answer(val){
@@ -333,94 +229,4 @@ function answer(val){
   }
 
   current++;
-  current < questions.length ? showQuestion() : showResult();
-}
-
-function showResult(){
-  const isFullTest = !isRetryMode && questions.length === questionsMaster.length;
-  const passLine = isFullTest ? PASS_LINE : questions.length;
-
-  // 通常の50問完了・合格のみGA4に送信。誤答再テストは対象外。
-  if (isFullTest && typeof gtag === "function") {
-    gtag("event", "quiz_complete", { quiz_type: "signs_markings", score: score });
-    if (score >= PASS_LINE) {
-      gtag("event", "quiz_pass", { quiz_type: "signs_markings", score: score });
-    }
-  }
-
-  const passed = score >= passLine;
-  const rate = Math.round(score / questions.length * 100);
-  const status = isFullTest ? (passed ? "合格" : "不合格") : (passed ? "復習クリア" : "もう一度復習しましょう");
-  const message = wrongList.length
-    ? `間違えた${wrongList.length}問を復習して、${isFullTest ? "合格" : "全問正解"}を目指しましょう。`
-    : "全問正解です！よくできました。";
-  const actions = `
-    <div class="result-actions">
-      ${wrongList.length ? `<button class="action-btn" onclick="retryWrong()">間違えた${wrongList.length}問を再テスト</button>` : ""}
-      <button class="action-btn ${wrongList.length ? "secondary" : ""}" onclick="restartAll()">最初から50問に挑戦</button>
-    </div>`;
-  let html = `
-    <section class="result-summary" aria-labelledby="result-title">
-      <h2 id="result-title" tabindex="-1">${isFullTest ? "テスト結果" : "再テスト結果"}</h2>
-      <p class="result-status ${passed ? "passed" : ""}">${status}</p>
-      <p class="result-score">${score}<small> / ${questions.length}点</small></p>
-      <p class="result-meta">${isFullTest ? `合格ライン ${PASS_LINE}点` : "再テストの目標：全問正解"}<br>正答率 ${rate}%${!passed ? `・${isFullTest ? "合格" : "全問正解"}まであと${passLine - score}点` : ""}</p>
-      <p class="result-message">${message}</p>
-    </section>
-    ${actions}
-  `;
-  if(wrongList.length){
-    html += `<section class="review"><h3>間違えた問題の解説 <span>${wrongList.length}問</span></h3>`;
-    wrongList.forEach(w=>{
-      const correctAnswer = questionsMaster.find(q => q.no === w.no).a;
-      html += `
-        <article class="review-card">
-          <h4>第${w.no}問</h4>
-          <p>${w.q}</p>
-          ${w.img ? `<img src="${w.img}" class="question-img" alt="第${w.no}問の標識・標示">` : ""}
-          <div class="answer-label">正解：${correctAnswer ? "○" : "×"}</div>
-          <p class="explanation"><strong>解説</strong>${w.e}</p>
-        </article>`;
-    });
-    html += `</section>${actions}`;
-  }
-  html += `<a class="menu-link" href="https://at21or7.github.io/">← 問題メニューに戻る</a><a class="school-link" href="https://murakami-ds.com/">村上中央自動車学校 公式サイトへ →</a>`;
-
-  container.innerHTML = html;
-  document.getElementById("result-title").focus();
-  window.scrollTo(0, 0);
-}
-
-function retryWrong(){
-  const retryNumbers = wrongList.map(w => w.no);
-  const retryQuestions = questionsMaster.filter(q => retryNumbers.includes(q.no));
-
-  questions.length = 0;
-  retryQuestions.forEach(q => questions.push(q));
-
-  current = 0;
-  score = 0;
-  wrongList = [];
-  isRetryMode = true;
-
-  showQuestion();
-}
-
-function restartAll(){
-  questions.length = 0;
-  questionsMaster.forEach(q => questions.push(q));
-
-  current = 0;
-  score = 0;
-  wrongList = [];
-  isRetryMode = false;
-
-  showQuestion();
-}
-
-showQuestion();
-</script>
-
-</body>
-</html>
-
+  current < questions.length ? showQuestion() : showRes
