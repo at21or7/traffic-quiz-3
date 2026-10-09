@@ -179,16 +179,45 @@ button:focus-visible,a:focus-visible{outline:3px solid #dd8500;outline-offset:4p
 #container .quiz-progress progress::-moz-progress-bar{background:#003366;border-radius:10px}
 #container .menu-link{display:block;text-align:center;margin:20px 0 8px;padding:12px;font-size:17px;line-height:1.6;color:#003366;text-underline-offset:4px}
 @media(max-width:600px){#container .quiz-progress{padding:12px}#container .quiz-progress-label{font-size:15px}}
+
+/* スマホの出題画面 */
+.mobile-heading,.mobile-subtitle{display:none}
+.answer-choices{display:contents}
+@media screen and (max-width:600px){
+  *,*::before,*::after{box-sizing:border-box}
+  body{padding:12px 8px}
+  h1{margin:4px 0 8px;font-size:22px;line-height:1.45}
+  h1 .school-name{display:block;font-size:16px;font-weight:600;margin-bottom:4px}
+  .desktop-heading,.desktop-subtitle,.header-break{display:none}
+  .mobile-heading,.mobile-subtitle{display:block}
+  .quiz-subtitle{font-size:14px !important;line-height:1.6 !important;margin:8px 0 12px;color:#526578}
+  #container:has(.question-screen){padding:16px;margin:12px auto;border:1px solid #c8d9e8;border-radius:14px}
+  #container .quiz-progress{padding:12px;margin:0 0 16px}
+  #container .quiz-progress-label{flex-wrap:wrap;gap:4px 8px;font-size:14px;line-height:1.5;margin-bottom:8px}
+  #container .quiz-progress-label span{min-width:0}
+  #container .quiz-progress-label span:last-child{white-space:nowrap}
+  #container .question-screen .question-no{font-size:20px !important;line-height:1.5 !important;color:#003366;font-weight:bold;margin:0 0 12px}
+  #container .question-screen .question-text{font-size:24px !important;line-height:1.65 !important;font-weight:600;margin:0 0 16px;overflow-wrap:anywhere}
+  #container .question-screen img.question-img{display:block;width:200px;max-width:100%;height:auto;max-height:240px;object-fit:contain;margin:16px auto 20px}
+  #container .question-screen .answer-choices{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin:0}
+  #container .question-screen .answer-choices button{width:100%;min-height:80px;padding:8px 0;font-size:48px;line-height:1.25;margin:0;color:#003366;background:#f8fbff;border:2px solid #003366;border-radius:12px;font-weight:bold;touch-action:manipulation}
+  #container .question-screen .menu-link{font-size:15px;line-height:1.6;min-height:44px;margin:16px 0 0;padding:10px 4px}
+}
+@media screen and (max-width:360px){
+  #container:has(.question-screen){padding:14px}
+  #container .quiz-progress-label{font-size:13px}
+  #container .question-screen img.question-img{width:180px}
+}
 </style>
 
 </head>
 
 <body>
 
-<h1>村上中央自動車学校　学科問題</h1>
-<p style="text-align:center;color:#555;font-size:28px;">
+<h1><span class="school-name">村上中央自動車学校</span><span class="desktop-heading">　学科問題</span><span class="mobile-heading">標識・標示問題50問</span></h1>
+<p style="text-align:center;color:#555;font-size:28px;" class="quiz-subtitle"><span class="desktop-subtitle">
 標識・標示の問題（全50問）
-</p>
+</span><span class="mobile-subtitle">○×形式・全50問・合格ライン47点</span></p>
 
 <div id="container"></div>
 
@@ -269,13 +298,13 @@ function showQuestion(){
   if(current === 0) window.scrollTo(0, 0);
   const q = questions[current];
   let imgHtml = q.img ? `<img src="${q.img}" class="question-img" alt="第${q.no}問の標識・標示">` : "";
-  container.innerHTML = `${progressMarkup()}
-    <p style="font-size:36px;font-weight:bold;color:#003366;">【第 ${q.no} 問】</p>
-    <p style="font-size:clamp(32px,8.5vw,42px);line-height:1.8;font-weight:bold;">${q.q}</p>
+  container.innerHTML = `<section class="question-screen">${progressMarkup()}
+    <p style="font-size:36px;font-weight:bold;color:#003366;" class="question-no">【第 ${q.no} 問】</p>
+    <p style="font-size:clamp(32px,8.5vw,42px);line-height:1.8;font-weight:bold;" class="question-text">${q.q}</p>
     ${imgHtml}
-    <button onclick="answer(true)">○</button>
-    <button onclick="answer(false)">×</button>
-  <a class="menu-link" href="https://at21or7.github.io/">← 問題メニューに戻る</a>`;
+    <div class="answer-choices"><button aria-label="○：正しい" onclick="answer(true)">○</button>
+    <button aria-label="×：誤り" onclick="answer(false)">×</button></div>
+  <a class="menu-link" href="https://at21or7.github.io/">← 問題メニューに戻る</a></section>`;
 }
 
 function answer(val){
@@ -385,39 +414,3 @@ showQuestion();
 
 </body>
 </html>
-
-
-
-
-  
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
