@@ -2,6 +2,7 @@
 
 <html lang="ja">
 <head>
+<base href="https://at21or7.github.io/traffic-quiz-3/">
 <meta charset="UTF-8">
 <title>標識・標示の学科問題50問｜無料○×模擬テスト｜村上中央自動車学校</title>
 <meta name="description" content="運転免許の学科試験対策に役立つ標識・標示の○×問題50問。無料で挑戦でき、採点・合格判定・間違えた問題の解説と再テストができます。村上中央自動車学校が提供しています。">
@@ -123,6 +124,51 @@ h3{
     padding:22px 10px;
   }
 }
+/* 結果画面 */
+#container:has(.result-summary){max-width:820px;border:1px solid #d7e2ec;border-radius:20px;padding:32px;box-shadow:0 8px 30px #0033660a;color:#24364a}
+.result-summary{text-align:center;padding:8px 0 24px}
+.result-summary h2{font-size:18px;color:#526578;margin:0 0 16px}
+.result-status{display:inline-block;border-radius:30px;padding:8px 20px;font-size:18px;font-weight:bold;margin:0;background:#fff0ec;color:#a73521}
+.result-status.passed{background:#e6f5ed;color:#17633e}
+.result-summary .result-score{font-size:76px;color:#003366;line-height:1.15;margin:18px 0 12px;font-weight:bold}
+.result-score small{font-size:24px;color:#65768a;font-weight:normal}
+.result-meta{font-size:17px;line-height:1.8;margin:8px 0;color:#526578}
+.result-message{font-size:18px;line-height:1.8;margin:16px 0 0}
+.result-actions{display:grid;gap:12px;margin:8px 0 30px}
+.result-actions .action-btn{width:100%;min-height:56px;font-size:18px;line-height:1.6;padding:14px 12px;margin:0;border-radius:12px;font-weight:bold}
+.result-actions .secondary{background:#fff;color:#003366;border:1px solid #aabed0}
+button:focus-visible,a:focus-visible{outline:3px solid #dd8500;outline-offset:4px}
+.result-actions button:hover{filter:brightness(.95)}
+.review{border-top:1px solid #d7e2ec;padding-top:24px;margin-top:0}
+.review h3{font-size:22px;margin:0 0 18px;line-height:1.5;color:#003366}
+.review h3 span{font-size:15px;color:#65768a;font-weight:normal;margin-left:8px}
+.review-card{border:1px solid #d7e2ec;border-radius:14px;padding:22px;margin-bottom:16px;background:#fff}
+.review-card h4{font-size:16px;color:#003366;margin:0 0 12px}
+.review .review-card p{font-size:18px;line-height:1.85;margin:0 0 16px;overflow-wrap:anywhere}
+.review-card .answer-label{display:inline-block;background:#edf4fb;color:#003366;font-size:16px;font-weight:bold;padding:6px 12px;border-radius:8px;margin-bottom:14px}
+.review .review-card .explanation{background:#f3f7fa;border-radius:10px;padding:16px;margin:0}
+.explanation strong{display:block;font-size:15px;color:#526578;margin-bottom:6px}
+.school-link{display:block;text-align:center;color:#003366;font-size:16px;line-height:1.7;padding:16px 0;text-underline-offset:4px}
+@media(max-width:600px){
+#container:has(.result-summary){padding:22px 16px;border-radius:16px}
+.result-summary .result-score{font-size:64px}
+.result-score small{font-size:21px}
+.result-meta{font-size:16px}
+.result-message{font-size:17px}
+.review h3{font-size:20px}
+.review-card{padding:18px 16px}
+.review .review-card p{font-size:17px}
+.result-actions .action-btn{font-size:17px}
+}
+
+
+#container .result-status{font-size:18px;line-height:1.6}
+#container .result-summary .result-score{font-size:76px;line-height:1.15}
+#container .result-meta{font-size:17px;line-height:1.8}
+#container .result-message{font-size:18px;line-height:1.8}
+#container .review-card p{font-size:18px;line-height:1.85}
+#container .review-card .answer-label{font-size:16px;line-height:1.6}
+@media(max-width:600px){#container .result-summary .result-score{font-size:64px}#container .result-meta{font-size:16px}#container .result-message,#container .review-card p{font-size:17px}}
 </style>
 
 </head>
@@ -205,6 +251,7 @@ questions.forEach((q, i) => q.no = i + 1);
 const questionsMaster = [...questions];
 
 function showQuestion(){
+  if(current === 0) window.scrollTo(0, 0);
   const q = questions[current];
   let imgHtml = q.img ? `<img src="${q.img}" class="question-img" alt="第${q.no}問の標識・標示">` : "";
   container.innerHTML = `
@@ -248,56 +295,47 @@ function showResult(){
     }
   }
 
+  const passed = score >= passLine;
+  const rate = Math.round(score / questions.length * 100);
+  const status = isFullTest ? (passed ? "合格" : "不合格") : (passed ? "復習クリア" : "もう一度復習しましょう");
+  const message = wrongList.length
+    ? `間違えた${wrongList.length}問を復習して、${isFullTest ? "合格" : "全問正解"}を目指しましょう。`
+    : "全問正解です！よくできました。";
+  const actions = `
+    <div class="result-actions">
+      ${wrongList.length ? `<button class="action-btn" onclick="retryWrong()">間違えた${wrongList.length}問を再テスト</button>` : ""}
+      <button class="action-btn ${wrongList.length ? "secondary" : ""}" onclick="restartAll()">最初から50問に挑戦</button>
+    </div>`;
   let html = `
-    <h2 style="font-size:48px;">結果</h2>
-    <p style="font-size:40px;font-weight:bold;">得点：${score} / ${questions.length}</p>
+    <section class="result-summary" aria-labelledby="result-title">
+      <h2 id="result-title" tabindex="-1">${isFullTest ? "テスト結果" : "再テスト結果"}</h2>
+      <p class="result-status ${passed ? "passed" : ""}">${status}</p>
+      <p class="result-score">${score}<small> / ${questions.length}点</small></p>
+      <p class="result-meta">${isFullTest ? `合格ライン ${PASS_LINE}点` : "再テストの目標：全問正解"}<br>正答率 ${rate}%${!passed ? `・${isFullTest ? "合格" : "全問正解"}まであと${passLine - score}点` : ""}</p>
+      <p class="result-message">${message}</p>
+    </section>
+    ${actions}
   `;
-
-  html += score >= passLine
-    ? `<p class="correct">合格</p>`
-    : `<p class="wrong">不合格</p>`;
-
-  if(wrongList.length > 0){
-    html += `<div class="review"><h3>間違えた問題の解説</h3>`;
-
+  if(wrongList.length){
+    html += `<section class="review"><h3>間違えた問題の解説 <span>${wrongList.length}問</span></h3>`;
     wrongList.forEach(w=>{
-      let imgHtml = w.img ? `<img src="${w.img}" class="question-img" alt="第${w.no}問の標識・標示">` : "";
-
+      const correctAnswer = questionsMaster.find(q => q.no === w.no).a;
       html += `
-        <div style="margin-bottom:30px;">
-          <strong>【第${w.no}問】</strong><br><br>
-          ${w.q}<br>
-          ${imgHtml}
-          <div style="font-size:34px;line-height:1.8;">
-            <span class="wrong">解説：</span>${w.e}
-          </div>
-        </div>
-      `;
+        <article class="review-card">
+          <h4>第${w.no}問</h4>
+          <p>${w.q}</p>
+          ${w.img ? `<img src="${w.img}" class="question-img" alt="第${w.no}問の標識・標示">` : ""}
+          <div class="answer-label">正解：${correctAnswer ? "○" : "×"}</div>
+          <p class="explanation"><strong>解説</strong>${w.e}</p>
+        </article>`;
     });
-
-    html += `</div>`;
-
-    html += `
-      <button class="action-btn" onclick="retryWrong()">
-        間違えた問題だけもう一度テストする
-      </button>
-    `;
-  }else{
-    html += `<p class="correct">全問正解です！</p>`;
+    html += `</section>${actions}`;
   }
+  html += `<a class="school-link" href="https://murakami-ds.com/">村上中央自動車学校 公式サイトへ →</a>`;
 
-  html += `
-    <button class="action-btn" onclick="restartAll()">
-      最初からやり直す
-    </button>
-  `;
-
-  html += `
-    <p style="text-align:center;margin-top:30px;">
-      <a href="https://murakami-ds.com/" style="display:block;background:#003366;color:#fff;padding:18px 10px;border-radius:12px;font-size:24px;font-weight:bold;text-decoration:none;">村上中央自動車学校 公式サイトはこちら</a>
-    </p>
-  `;
   container.innerHTML = html;
+  document.getElementById("result-title").focus();
+  window.scrollTo(0, 0);
 }
 
 function retryWrong(){
@@ -332,8 +370,6 @@ showQuestion();
 
 </body>
 </html>
-
-
 
 
   
