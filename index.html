@@ -169,6 +169,16 @@ button:focus-visible,a:focus-visible{outline:3px solid #dd8500;outline-offset:4p
 #container .review-card p{font-size:18px;line-height:1.85}
 #container .review-card .answer-label{font-size:16px;line-height:1.6}
 @media(max-width:600px){#container .result-summary .result-score{font-size:64px}#container .result-meta{font-size:16px}#container .result-message,#container .review-card p{font-size:17px}}
+
+#container .quiz-progress{margin:0 0 24px;padding:16px;background:#f1f6fa;border-radius:12px}
+#container .quiz-progress-label{display:flex;justify-content:space-between;gap:12px;font-size:16px;font-weight:bold;color:#003366;line-height:1.6;margin-bottom:10px}
+#container .quiz-progress-label span:last-child{font-weight:normal;color:#526578}
+#container .quiz-progress progress{display:block;width:100%;height:10px;border:0;border-radius:10px;overflow:hidden;background:#dce6ef;accent-color:#003366}
+#container .quiz-progress progress::-webkit-progress-bar{background:#dce6ef;border-radius:10px}
+#container .quiz-progress progress::-webkit-progress-value{background:#003366;border-radius:10px}
+#container .quiz-progress progress::-moz-progress-bar{background:#003366;border-radius:10px}
+#container .menu-link{display:block;text-align:center;margin:20px 0 8px;padding:12px;font-size:17px;line-height:1.6;color:#003366;text-underline-offset:4px}
+@media(max-width:600px){#container .quiz-progress{padding:12px}#container .quiz-progress-label{font-size:15px}}
 </style>
 
 </head>
@@ -250,17 +260,22 @@ const questions = [
 questions.forEach((q, i) => q.no = i + 1);
 const questionsMaster = [...questions];
 
+
+function progressMarkup(){
+  return `<div class="quiz-progress"><div class="quiz-progress-label"><span>${isRetryMode ? '再テスト' : 'テスト'}：現在${current + 1}問目／全${questions.length}問</span><span>回答済み ${current}問</span></div><progress value="${current}" max="${questions.length}" aria-label="回答済みの問題数">${current}／${questions.length}</progress></div>`;
+}
+
 function showQuestion(){
   if(current === 0) window.scrollTo(0, 0);
   const q = questions[current];
   let imgHtml = q.img ? `<img src="${q.img}" class="question-img" alt="第${q.no}問の標識・標示">` : "";
-  container.innerHTML = `
+  container.innerHTML = `${progressMarkup()}
     <p style="font-size:36px;font-weight:bold;color:#003366;">【第 ${q.no} 問】</p>
     <p style="font-size:clamp(32px,8.5vw,42px);line-height:1.8;font-weight:bold;">${q.q}</p>
     ${imgHtml}
     <button onclick="answer(true)">○</button>
     <button onclick="answer(false)">×</button>
-  `;
+  <a class="menu-link" href="https://at21or7.github.io/">← 問題メニューに戻る</a>`;
 }
 
 function answer(val){
@@ -331,7 +346,7 @@ function showResult(){
     });
     html += `</section>${actions}`;
   }
-  html += `<a class="school-link" href="https://murakami-ds.com/">村上中央自動車学校 公式サイトへ →</a>`;
+  html += `<a class="menu-link" href="https://at21or7.github.io/">← 問題メニューに戻る</a><a class="school-link" href="https://murakami-ds.com/">村上中央自動車学校 公式サイトへ →</a>`;
 
   container.innerHTML = html;
   document.getElementById("result-title").focus();
@@ -370,6 +385,8 @@ showQuestion();
 
 </body>
 </html>
+
+
 
 
   
